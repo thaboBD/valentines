@@ -14,8 +14,11 @@ export class EnvelopeAnimations {
     // DOM elements
     this.elements = {
       envelopeInteractive: document.getElementById('envelope-interactive'),
+      envelopeFlap: document.querySelector('.envelope-flap-interactive'),
+      letter: document.getElementById('letter'),
       videoContainer: document.getElementById('video-container'),
       unlockMessage: document.getElementById('unlock-message'),
+      cursiveText: document.querySelector('#envelope-interactive .cursive-text'),
     };
   }
 
@@ -40,60 +43,71 @@ export class EnvelopeAnimations {
       },
     });
 
-    // Simplified sequence:
-    // 1. Fade out unlock message
-    // 2. Fade out envelope
-    // 3. Show video container full screen
+    // Animation sequence:
+    // 1. Fade out unlock message and "To Simomo"
+    // 2. Open envelope flap
+    // 3. Slide letter out from envelope
+    // 4. Enlarge letter to full screen
+    // 5. Fade in video
 
-    const fadeDuration = this.reducedMotion ? 0.1 : 0.3;
-    const scaleDuration = this.reducedMotion ? 0.1 : 0.4;
-    const videoDuration = this.reducedMotion ? 0.1 : 0.5;
+    const isMobile = window.innerWidth <= 480;
+    const finalWidth = isMobile ? '95vw' : '90vw';
+    const finalHeight = isMobile ? '95vh' : '90vh';
+    const finalMaxWidth = isMobile ? '95vw' : '1200px';
+    const finalMaxHeight = isMobile ? '95vh' : '800px';
 
     this.timeline
-      // Fade out the unlock message
+      // 1. Fade out unlock message
       .to(this.elements.unlockMessage, {
         opacity: 0,
-        duration: fadeDuration,
+        duration: this.reducedMotion ? 0.1 : 0.3,
         ease: 'power2.out',
       })
-      // Fade out entire envelope
-      .to(
-        this.elements.envelopeInteractive,
-        {
-          opacity: 0,
-          scale: this.reducedMotion ? 1 : 0.9,
-          duration: scaleDuration,
-          ease: 'power2.in',
-        },
-        '-=0.1'
-      )
-      // Position video container centered (responsive sizing)
-      .set(this.elements.videoContainer, {
+      // Fade out "To Simomo" text
+      .to(this.elements.cursiveText, {
+        opacity: 0,
+        duration: this.reducedMotion ? 0.1 : 0.3,
+        ease: 'power2.out',
+      }, '-=0.2')
+      // 2. Open envelope flap (rotate backward)
+      .to(this.elements.envelopeFlap, {
+        rotationX: -180,
+        duration: this.reducedMotion ? 0.1 : 0.8,
+        ease: 'power2.inOut',
+        transformOrigin: '50% 0%',
+      }, '+=0.2')
+      // 3. Slide letter out and make it visible
+      .to(this.elements.letter, {
+        opacity: 1,
+        y: -200,
+        duration: this.reducedMotion ? 0.1 : 0.9,
+        ease: 'power2.out',
+      }, '-=0.3')
+      // 4. Enlarge letter to full screen (fixed positioning)
+      .to(this.elements.letter, {
         position: 'fixed',
         top: '50%',
         left: '50%',
-        width: window.innerWidth <= 480 ? '95vw' : '90vw',
-        height: window.innerWidth <= 480 ? '95vh' : '90vh',
-        maxWidth: window.innerWidth <= 480 ? '95vw' : '1200px',
-        maxHeight: window.innerWidth <= 480 ? '95vh' : '800px',
-        zIndex: 100,
         xPercent: -50,
         yPercent: -50,
-      })
-      // Fade in video with scale
-      .fromTo(
-        this.elements.videoContainer,
-        {
-          opacity: 0,
-          scale: this.reducedMotion ? 1 : 0.9,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: videoDuration,
-          ease: this.reducedMotion ? 'none' : 'back.out(1.2)',
-        }
-      );
+        width: finalWidth,
+        height: finalHeight,
+        maxWidth: finalMaxWidth,
+        maxHeight: finalMaxHeight,
+        borderRadius: '12px',
+        zIndex: 100,
+        duration: this.reducedMotion ? 0.1 : 0.7,
+        ease: 'power2.inOut',
+      }, '-=0.3')
+      // 5. Fade in video and change object-fit to contain
+      .to(this.elements.videoContainer, {
+        opacity: 1,
+        duration: this.reducedMotion ? 0.1 : 0.5,
+        ease: 'power2.in',
+      }, '-=0.3')
+      .set(this.elements.videoContainer.querySelector('video'), {
+        objectFit: 'contain',
+      });
   }
 
   /**
@@ -117,58 +131,70 @@ export class EnvelopeAnimations {
       },
     });
 
-    // Simplified sequence:
+    // Retraction sequence (reverse of opening):
     // 1. Fade out video
-    // 2. Reset video container position
-    // 3. Fade envelope back in
-
-    const videoFadeOut = this.reducedMotion ? 0.1 : 0.4;
-    const envelopeFadeIn = this.reducedMotion ? 0.1 : 0.5;
+    // 2. Shrink letter back down
+    // 3. Slide letter back into envelope
+    // 4. Close envelope flap
+    // 5. Fade "To Simomo" back in
 
     this.timeline
-      // Fade out video
+      // 1. Fade out video and reset object-fit
       .to(this.elements.videoContainer, {
         opacity: 0,
-        scale: this.reducedMotion ? 1 : 0.9,
-        duration: videoFadeOut,
-        ease: 'power2.in',
+        duration: this.reducedMotion ? 0.1 : 0.4,
+        ease: 'power2.out',
       })
-      // Reset video container to original state
-      .set(this.elements.videoContainer, {
+      .set(this.elements.videoContainer.querySelector('video'), {
+        objectFit: 'cover',
+      })
+      // 2. Shrink letter back to original size
+      .to(this.elements.letter, {
         position: 'absolute',
-        top: 'auto',
-        left: 'auto',
-        width: 0,
-        height: 0,
+        top: '50%',
+        left: '50%',
+        xPercent: -50,
+        yPercent: -50,
+        width: window.innerWidth <= 480 ? '200px' : '240px',
+        height: window.innerWidth <= 480 ? '135px' : '160px',
         maxWidth: 'none',
         maxHeight: 'none',
-        zIndex: 'auto',
-        xPercent: 0,
-        yPercent: 0,
-        clearProps: 'transform',
-      })
-      // Fade envelope back in
-      .to(
-        this.elements.envelopeInteractive,
-        {
-          opacity: 1,
-          scale: 1,
-          duration: envelopeFadeIn,
-          ease: this.reducedMotion ? 'none' : 'back.out(1.2)',
-        },
-        '-=0.2'
-      );
+        borderRadius: '6px',
+        zIndex: 1,
+        clearProps: 'y',
+        duration: this.reducedMotion ? 0.1 : 0.7,
+        ease: 'power2.inOut',
+      }, '-=0.2')
+      // 3. Slide letter back into envelope
+      .to(this.elements.letter, {
+        y: 0,
+        opacity: 0,
+        duration: this.reducedMotion ? 0.1 : 0.8,
+        ease: 'power2.in',
+      }, '-=0.3')
+      // 4. Close envelope flap
+      .to(this.elements.envelopeFlap, {
+        rotationX: 0,
+        duration: this.reducedMotion ? 0.1 : 0.6,
+        ease: 'power2.inOut',
+      }, '-=0.4')
+      // 5. Fade "To Simomo" back in
+      .to(this.elements.cursiveText, {
+        opacity: 1,
+        duration: this.reducedMotion ? 0.1 : 0.4,
+        ease: 'power2.inOut',
+      }, '-=0.3');
   }
 
   /**
-   * Fade out the envelope completely
+   * Fade out the envelope completely (used when transitioning to question state)
    * @param {Function} onComplete - Callback when animation completes
    */
   fadeOutEnvelope(onComplete) {
-    gsap.to(this.elements.envelopeInteractive.parentElement, {
+    gsap.to(this.elements.envelopeInteractive.parentElement.parentElement, {
       opacity: 0,
       scale: 0.9,
-      duration: 0.5,
+      duration: this.reducedMotion ? 0.1 : 0.5,
       ease: 'power2.out',
       onComplete: () => {
         if (onComplete && typeof onComplete === 'function') {

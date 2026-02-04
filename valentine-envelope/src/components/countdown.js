@@ -16,7 +16,7 @@ export class CountdownTimer {
     // PRODUCTION: year: 2026, month: 2, day: 14
     this.targetDate = DateTime.fromObject(
       {
-        year: 2024,
+        year: 2022,
         month: 1,
         day: 1,
         hour: 0,
