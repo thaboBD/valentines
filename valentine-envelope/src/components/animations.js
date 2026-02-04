@@ -51,10 +51,10 @@ export class EnvelopeAnimations {
     // 5. Fade in video
 
     const isMobile = window.innerWidth <= 480;
-    const finalWidth = isMobile ? '95vw' : '90vw';
-    const finalHeight = isMobile ? '95vh' : '90vh';
-    const finalMaxWidth = isMobile ? '95vw' : '1200px';
-    const finalMaxHeight = isMobile ? '95vh' : '800px';
+    const finalWidth = isMobile ? '100vw' : '90vw';
+    const finalHeight = isMobile ? '100vh' : '90vh';
+    const finalMaxWidth = isMobile ? '100vw' : '1200px';
+    const finalMaxHeight = isMobile ? '100vh' : '800px';
 
     this.timeline
       // 1. Fade out unlock message
