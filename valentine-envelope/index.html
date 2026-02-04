@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/heart.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To Simomo 💌</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Parisienne&family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Locked State -->
+    <div id="locked-state" class="state-container">
+      <section class="center">
+        <h1>Valentine's Envelope</h1>
+
+        <div id="envelope" class="envelope is-locked">
+          <div class="envelope-flap" aria-hidden="true"></div>
+          <div class="envelope-front">
+            <p class="cursive-text">To Simomo</p>
+          </div>
+        </div>
+
+        <div class="countdown-section">
+          <p class="lockline">Unlocks on Valentine's Day 2026</p>
+          <p class="countdown-display" id="countdown-display">
+            <span id="days">00</span>d <span id="hours">00</span>h <span id="minutes">00</span>m <span
+              id="seconds">00</span>s
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Unlocked State -->
+    <div id="unlocked-state" class="state-container hidden">
+      <section class="center">
+        <h1>Valentine's Envelope</h1>
+
+        <div id="envelope-interactive" class="envelope envelope-interactive" role="button" tabindex="0"
+          aria-label="Open the envelope">
+          <div class="envelope-body">
+            <div class="envelope-flap-interactive"></div>
+            <div class="envelope-front">
+              <p class="cursive-text">To Simomo</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="unlock-message" id="unlock-message">Click to open</p>
+      </section>
+
+      <!-- Video Container (outside envelope to avoid opacity inheritance) -->
+      <div id="video-container" class="video-container">
+        <video id="montage-video" preload="metadata" playsinline webkit-playsinline
+          aria-label="Video montage">
+          <source src="./video/montage.mp4" type="video/mp4">
+          Your browser doesn't support video playback.
+        </video>
+        <div id="loading-indicator" class="loading-indicator hidden">
+          Loading your letter...
+        </div>
+      </div>
+    </div>
+
+    <!-- Question State -->
+    <div id="question-state" class="state-container hidden">
+      <div class="question-container">
+        <h1 class="question-text">Will you be my Valentine?</h1>
+        <div class="button-container">
+          <button id="btn-yes" class="response-button" aria-label="Yes">Yes</button>
+          <button id="btn-of-course" class="response-button" aria-label="Of course">Of course</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final State -->
+    <div id="final-state" class="state-container hidden">
+      <div class="final-container">
+        <h1 class="final-text">Thank you for choosing me not just today but every day</h1>
+        <p class="final-subtext">I love you.</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

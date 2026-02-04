@@ -1,0 +1,15 @@
+NOTE: Video files should be placed in public/video/ folder, not here!
+
+The correct location for your video is:
+valentine-envelope/public/video/montage.mp4
+
+Why public/ folder?
+- Large files like videos should not be processed by Vite bundler
+- Files in public/ are served directly as static assets
+- Better performance for large media files
+
+For production:
+1. Add your montage.mp4 file to public/video/ directory
+2. Use H.264 codec for best compatibility
+3. Include audio in the video file
+4. Optimize file size (recommended < 100MB)
