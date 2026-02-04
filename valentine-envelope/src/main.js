@@ -47,8 +47,11 @@ const elements = {
   finalState: document.getElementById('final-state'),
 
   envelopeInteractive: document.getElementById('envelope-interactive'),
+  envelopeLocked: document.getElementById('envelope'),
   video: document.getElementById('montage-video'),
   loadingIndicator: document.getElementById('loading-indicator'),
+  lockedAudio: document.getElementById('locked-audio'),
+  patiencePopup: document.getElementById('patience-popup'),
 
   btnYes: document.getElementById('btn-yes'),
   btnOfCourse: document.getElementById('btn-of-course'),
@@ -362,6 +365,66 @@ function initEnvelopeInteraction() {
   });
 }
 
+/**
+ * Handle locked envelope click - play audio and show popup
+ */
+function handleLockedEnvelopeClick() {
+  if (currentState === AppState.LOCKED) {
+    console.log('Locked envelope clicked - playing audio and showing popup');
+
+    // Show patience popup
+    if (elements.patiencePopup) {
+      elements.patiencePopup.classList.remove('hidden');
+
+      // Auto-hide after 2 seconds
+      setTimeout(() => {
+        elements.patiencePopup.classList.add('hidden');
+      }, 2000);
+    }
+
+    // Play audio
+    if (elements.lockedAudio) {
+      // Reset audio to start if already playing
+      elements.lockedAudio.currentTime = 0;
+      // Play audio
+      const playPromise = elements.lockedAudio.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.warn('Audio playback failed (may need user interaction first):', error);
+        });
+      }
+    }
+  }
+}
+
+/**
+ * Initialize locked envelope interaction
+ */
+function initLockedEnvelopeInteraction() {
+  if (!elements.envelopeLocked) {
+    return;
+  }
+
+  // Click handler for locked envelope
+  elements.envelopeLocked.addEventListener('click', handleLockedEnvelopeClick);
+
+  // Keyboard accessibility
+  elements.envelopeLocked.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleLockedEnvelopeClick();
+    }
+  });
+
+  // Allow popup to be dismissed by clicking on it
+  if (elements.patiencePopup) {
+    elements.patiencePopup.addEventListener('click', () => {
+      elements.patiencePopup.classList.add('hidden');
+    });
+  }
+}
+
 // =============================
 // Question & Response Logic
 // =============================
@@ -438,6 +501,7 @@ function init() {
   initCountdown();
   initVideo();
   initEnvelopeInteraction();
+  initLockedEnvelopeInteraction();
   initQuestionButtons();
 
   // Set initial state

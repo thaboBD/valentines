@@ -143,7 +143,20 @@ body {
 
 .envelope.is-locked {
   opacity: 0.7;
-  cursor: not-allowed;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.envelope.is-locked:hover {
+  opacity: 0.8;
+  transform: scale(1.02);
+}
+
+.envelope.is-locked:active {
+  transform: scale(0.98);
 }
 
 .envelope-interactive {
@@ -175,6 +188,11 @@ body {
   .envelope-interactive:hover {
     transform: none;
     box-shadow: var(--shadow);
+  }
+
+  .envelope.is-locked:hover {
+    opacity: 0.7;
+    transform: none;
   }
 }
 
@@ -694,6 +712,93 @@ body {
 
   .unlock-message {
     margin-top: var(--spacing-sm);
+  }
+}
+
+/* ===========================
+   PATIENCE POPUP
+   =========================== */
+
+.patience-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.patience-popup:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.patience-popup-content {
+  background: linear-gradient(135deg, rgba(255, 107, 157, 0.95) 0%, rgba(255, 139, 171, 0.95) 100%);
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: popupBounce 0.5s ease-out;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+@keyframes popupBounce {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Disable animation for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .patience-popup-content {
+    animation: none;
+  }
+
+  @keyframes popupBounce {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+.patience-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  color: #fff;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.02em;
+}
+
+/* Mobile adjustments for popup */
+@media (max-width: 480px) {
+  .patience-popup-content {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    margin: 0 var(--spacing-md);
+    max-width: calc(100vw - 32px);
+  }
+
+  .patience-text {
+    font-size: clamp(1.25rem, 6vw, 2rem);
   }
 }
 
