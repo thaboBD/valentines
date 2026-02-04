@@ -34,11 +34,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: 'valentine-envelope/package-lock.json'
 
       - name: Install dependencies
+        working-directory: ./valentine-envelope
         run: npm ci
 
       - name: Build with Vite
+        working-directory: ./valentine-envelope
         run: npm run build
         env:
           NODE_ENV: production
@@ -49,7 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: './valentine-envelope/dist'
 
   # Deployment job
   deploy:
