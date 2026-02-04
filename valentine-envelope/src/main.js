@@ -30,7 +30,7 @@ let isInteractionLocked = false;
 const CONFIG = {
   // Video retraction timestamp (in seconds)
   // The letter will retract after this point in the video
-  videoRetractTime: 10,
+  videoRetractTime: 85,
 
   // Whether to keep video playing for audio after retraction
   keepAudioPlaying: true,
@@ -509,6 +509,22 @@ function init() {
     switchState(AppState.UNLOCKED);
   } else {
     switchState(AppState.LOCKED);
+  }
+
+  // Hide loading screen and show app after initialization
+  const loadingScreen = document.getElementById('loading-screen');
+  const app = document.getElementById('app');
+
+  if (loadingScreen) {
+    loadingScreen.classList.add('hidden');
+    // Remove from DOM after transition
+    setTimeout(() => {
+      loadingScreen.remove();
+    }, 300);
+  }
+
+  if (app) {
+    app.classList.add('loaded');
   }
 
   console.log('Initialization complete ✨');
