@@ -5,7 +5,7 @@ export default defineConfig({
   // Set base to your repository name for GitHub Pages
   // For example: base: '/valentine-envelope/'
   // Change this to match your repository name
-  base: process.env.NODE_ENV === 'production' ? '/valentine-envelope/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/valentines/' : '/',
 
   build: {
     // Output directory
