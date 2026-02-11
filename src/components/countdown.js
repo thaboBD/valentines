@@ -18,7 +18,7 @@ export class CountdownTimer {
       {
         year: 2026,
         month: 2,
-        day: 14,
+        day: 12,
         hour: 0,
         minute: 0,
         second: 0,
